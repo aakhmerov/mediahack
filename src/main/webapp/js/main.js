@@ -9,6 +9,7 @@ require.config({
         templates: '/templates',
         text: 'libs/ext/text',
         async: 'libs/require/async',
+        gmaps: 'libs/gmaps/gmaps-amd',
         json: 'libs/require/json'
     },
     waitSeconds: 200,

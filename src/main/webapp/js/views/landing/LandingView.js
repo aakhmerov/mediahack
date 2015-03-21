@@ -3,12 +3,11 @@ define([
     'underscore',
     'backbone',
     'views/SimpleView',
-    'collections/Elements',
-
+    'views/landing/AutocompleteView',
     'text!templates/landing/landingTemplate.html',
     //dirty hack for handlebars loading wait
     'handlebars'
-], function ($, _, Backbone, SimpleView, Elements, landingTemplate, Handlebars) {
+], function ($, _, Backbone, SimpleView,AutocompleteView, landingTemplate, Handlebars) {
 
     var LandingView = SimpleView.extend({
 
@@ -43,18 +42,21 @@ define([
 
         },
 
-        elements: null,
-
         acView: null,
-        listView: null,
-        mapView: null,
 
         initialize: function (options) {
             this.options = $.extend({}, options);
             this.options.params = this.parseUrlParams(this.options.params);
-            _.bindAll(this, 'render','getLoginURL','getUserData','login');
-            this.elements = new Elements();
+            _.bindAll(this, 'render','getLoginURL','getUserData','login','search');
             this.render();
+            this.acView.on('ready', this.search);
+            this.acView.fillInDefault("Berlin, Germany");
+        },
+
+        search: function() {
+            var place = this.acView.getSelected();
+            console.log(place.lat);
+            console.log(place.lng);
         },
 
         login : function () {
@@ -70,6 +72,7 @@ define([
 
         render: function () {
             this.$el.html(this.template({}));
+            this.acView = new AutocompleteView({el: this.$el.find('.ac-container')});
             return this;
         }
     });

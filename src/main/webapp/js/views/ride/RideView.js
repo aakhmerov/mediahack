@@ -127,7 +127,7 @@ define([
 
         renderSongInfo : function () {
             this.$el.find('.song-info').empty();
-            this.$el.find('.song-info').append(this.songInfoTemplate(this.songInfo.toJSON()))
+            this.$el.find('.song-info').append(this.songInfoTemplate(this.songInfo.toJSON()));
         },
 
         playNextTrack : function (first) {
