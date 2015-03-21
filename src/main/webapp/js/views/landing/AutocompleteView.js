@@ -21,14 +21,13 @@ define([
         placesService: new Gmaps.places.PlacesService($('<div/>')[0]),
 
         initialize: function () {
-            _.bindAll(this, 'render', 'attachAC', 'updateSelected', 'getSelected', 'fillInDefault', 'applyPrediction', 'retrieveGeoForPlace');
+            _.bindAll(this, 'render', 'attachAC', 'updateSelected',
+                'getSelected', 'fillInDefault', 'applyPrediction', 'retrieveGeoForPlace');
             this.render();
         },
 
         attachAC: function() {
-            var options = {
-               
-            };
+            var options = {};
             this.autocomplete = new Gmaps.places.Autocomplete(this.$el.find('.ac')[0], options);
             Gmaps.event.addListener(this.autocomplete, 'place_changed', this.updateSelected);
         },
@@ -57,7 +56,7 @@ define([
         updateSelected: function(place) {
             var location = place ? place.geometry.location : this.autocomplete.getPlace().geometry.location;
             this.selected = {lat: ''+ location.k.toFixed(2), lng: ''+location.D.toFixed(2)};
-            if (place) {
+            if (location) {
                 this.trigger('ready');
             }
         },

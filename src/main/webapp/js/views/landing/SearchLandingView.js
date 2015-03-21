@@ -31,6 +31,7 @@ define([
 
         search: function() {
             this.place = this.acView.getSelected();
+            console.log(this.place.lat + ',' + this.place.lng);
             this.$el.find('.ride').unbind( "click" );
             this.$el.find('.ride').on( "click",this.searchAndRide);
         },
