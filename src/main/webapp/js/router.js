@@ -14,7 +14,8 @@ define([
 
     var AppRouter = Backbone.Router.extend({
         routes: {
-            '(/?:query)': 'pageLanding',
+            '': 'pageLanding',
+            'ride': 'pageRide',
             '*actions': 'page404'
         },
 
@@ -25,7 +26,7 @@ define([
         idleInterval: null,
 
         initialize: function () {
-            _.bindAll(this, 'pageLanding', 'page404', 'showPage', 'removeCurrentView');
+            _.bindAll(this, 'pageLanding','pageRide', 'page404', 'showPage', 'removeCurrentView');
         },
 
         scrollToTop: function () {
@@ -58,6 +59,16 @@ define([
             this.view = view;
         },
 
+        pageRide :function (e, query) {
+            this.showParams = {
+                el: '#page',
+                mainContentOptions: {
+                    params: query
+                }
+            };
+            require(['views/ride/RideView'], this.showPage);
+        },
+
 
         pageLanding: function (e, query) {
             this.showParams = {
@@ -78,7 +89,7 @@ define([
 
         var appRouter = new AppRouter();
         window.router = appRouter;
-        Backbone.history.start({pushState: true});
+        Backbone.history.start();
 
         Handlebars.registerHelper('if_eq', function (v1, v2, options) {
             if (v1 == v2) {
