@@ -7,12 +7,14 @@ define([
     'backbone',
     'views/SimpleView',
     'collections/Elements',
-    'models/SpotifyUserModel',
-    'models/SpotifyUserPlaylistModel',
+    'models/spotify/SpotifyUserModel',
+    'models/spotify/SpotifyUserPlaylistModel',
+    'collections/spotify/SpotifyTracksCollection',
     'text!templates/ride/rideTemplate.html',
     //dirty hack for handlebars loading wait
     'handlebars'
-], function ($, _, Backbone, SimpleView, Elements,SpotifyUserModel,SpotifyUserPlaylistModel, landingTemplate, Handlebars) {
+], function ($, _, Backbone, SimpleView, Elements,SpotifyUserModel,
+             SpotifyUserPlaylistModel,SpotifyTracksCollection, landingTemplate, Handlebars) {
 
     var RideView = SimpleView.extend({
         CLIENT_ID : '3bfc971fe4a14065a3f68c0bb0e6d040', // Your client id
@@ -40,7 +42,7 @@ define([
 
         initialize: function (options) {
             this.options = $.extend({}, options);
-            _.bindAll(this, 'render','getUserInfo','fetchPlayLists');
+            _.bindAll(this, 'render','getUserInfo','fetchPlayLists','fetchTracks','playNextTrack');
             this.code = window.location.href.split('?')[1].split('=')[1].split('#')[0];
 
             $.ajax({
@@ -77,14 +79,36 @@ define([
 
         fetchPlayLists : function () {
             this.playListModel = new SpotifyUserPlaylistModel(this.spotifyUser.toJSON());
-            $.when(this.playListModel.fetch()).then(this.render);
+            $.when(this.playListModel.fetch()).then(this.fetchTracks);
+        },
+
+        fetchTracks : function () {
+            var data = {
+                user : this.playListModel.get('owner').id,
+                playList : this.playListModel.get('id')
+            };
+            this.tracksCollection = new SpotifyTracksCollection(data);
+            $.when(this.tracksCollection.fetch()).then(this.render);
+        },
+
+        playNextTrack : function () {
+            if (!this.audio) {
+                this.audio = new Audio(this.tracksCollection.at(0).get('track').preview_url);
+            } else {
+                this.audio.stop();
+                this.audio.src = this.tracksCollection.at(0).get('track').preview_url;
+            }
+
+            this.audio.play();
         },
 
         render: function () {
             this.$el.empty();
+            this.playNextTrack();
             var data = {
                 user : this.spotifyUser.toJSON(),
-                playList : this.playListModel.toJSON()
+                playList : this.playListModel.toJSON(),
+                tracks : this.tracksCollection.toJSON()
             };
             this.$el.append(this.template(data));
             return this;
