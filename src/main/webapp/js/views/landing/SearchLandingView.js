@@ -48,7 +48,8 @@ define([
         },
 
         render: function () {
-            this.$el.html(this.template({}));
+            this.$el.empty();
+            this.$el.append(this.template({}));
             this.acView = new AutocompleteView({el: this.$el.find('.ac-container')});
             return this;
         }
