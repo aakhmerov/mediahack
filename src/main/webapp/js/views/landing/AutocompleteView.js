@@ -27,7 +27,7 @@ define([
 
         attachAC: function() {
             var options = {
-                componentRestrictions: {country: 'de'}
+               
             };
             this.autocomplete = new Gmaps.places.Autocomplete(this.$el.find('.ac')[0], options);
             Gmaps.event.addListener(this.autocomplete, 'place_changed', this.updateSelected);

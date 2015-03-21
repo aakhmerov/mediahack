@@ -6,36 +6,27 @@ define([
     'underscore',
     'backbone',
     'views/SimpleView',
-    'models/playWords/PlayerLocationModel',
-    'views/playWords/LocationDisplayView',
-    'text!templates/playWords/playerView.html',
+    'text!templates/player/player.html',
     //dirty hack for handlebars loading wait
     'handlebars'
-], function ($, _, Backbone, SimpleView,PlayerLocationModel,LocationDisplayView, playerView,Handlebars) {
+], function ($, _, Backbone, SimpleView, player,Handlebars) {
 
     var PlayerView = SimpleView.extend({
 
-        template: Handlebars.compile(playerView),
+        template: Handlebars.compile(player),
 
         events: {
         },
 
         initialize: function (options) {
             this.options = $.extend({}, options);
-            this.location = new PlayerLocationModel ({
-                w3w : JSON.parse(window.localStorage.getItem ("w3w")),
-                place : window.localStorage.getItem ("place")
-            });
-            this.locationView = new LocationDisplayView({model:this.location});
             _.bindAll(this, 'render');
-            this.render();
         },
 
 
         render: function () {
             this.$el.empty();
-            this.$el.append(this.template({}));
-            this.$el.find('.location').append(this.locationView.render().$el);
+            this.$el.append(this.template(this.model.toJSON()));
             return this;
         }
     });

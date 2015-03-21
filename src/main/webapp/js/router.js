@@ -88,7 +88,7 @@ define([
                     params: query
                 }
             };
-            require(['views/playWords/PlayerView'], this.showPage);
+            require(['views/playWords/PlayerPageView'], this.showPage);
         },
 
         pageLanding: function (e, query) {
