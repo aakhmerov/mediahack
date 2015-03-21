@@ -27,7 +27,7 @@ define([
         template: Handlebars.compile(landingTemplate),
 
         events: {
-
+            'click .js-next' : 'handleNext'
         },
 
         filters: {
@@ -42,7 +42,7 @@ define([
 
         initialize: function (options) {
             this.options = $.extend({}, options);
-            _.bindAll(this, 'render','getUserInfo','fetchPlayLists','fetchTracks','playNextTrack');
+            _.bindAll(this, 'render','getUserInfo','fetchPlayLists','fetchTracks','playNextTrack','handleNext');
             this.code = window.location.href.split('?')[1].split('=')[1].split('#')[0];
 
             $.ajax({
@@ -63,6 +63,7 @@ define([
                     console.log(thrownError);
                 }
             });
+            this.currentTrack = 0;
         },
 
         getUserInfo : function (data, textStatus, jqXHR) {
@@ -91,12 +92,21 @@ define([
             $.when(this.tracksCollection.fetch()).then(this.render);
         },
 
-        playNextTrack : function () {
+        handleNext : function (event) {
+            this.playNextTrack(false);
+            this.render();
+        },
+
+        playNextTrack : function (first) {
+            if (!first) {
+                this.currentTrack = this.currentTrack + 1;
+            }
             if (!this.audio) {
-                this.audio = new Audio(this.tracksCollection.at(0).get('track').preview_url);
+                this.audio = new Audio(this.tracksCollection.at(this.currentTrack).get('track').preview_url);
             } else {
-                this.audio.stop();
-                this.audio.src = this.tracksCollection.at(0).get('track').preview_url;
+                this.audio.pause();
+                this.audio.currentTime = 0;
+                this.audio.src = this.tracksCollection.at(this.currentTrack).get('track').preview_url;
             }
 
             this.audio.play();
@@ -104,12 +114,13 @@ define([
 
         render: function () {
             this.$el.empty();
-            this.playNextTrack();
+
             var data = {
                 user : this.spotifyUser.toJSON(),
                 playList : this.playListModel.toJSON(),
-                tracks : this.tracksCollection.toJSON()
+                track : this.tracksCollection.at(this.currentTrack).get('track')
             };
+            this.playNextTrack(true);
             this.$el.append(this.template(data));
             return this;
         }
