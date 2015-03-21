@@ -8,10 +8,11 @@ define([
     'views/SimpleView',
     'collections/Elements',
     'models/SpotifyUserModel',
+    'models/SpotifyUserPlaylistModel',
     'text!templates/ride/rideTemplate.html',
     //dirty hack for handlebars loading wait
     'handlebars'
-], function ($, _, Backbone, SimpleView, Elements,SpotifyUserModel, landingTemplate, Handlebars) {
+], function ($, _, Backbone, SimpleView, Elements,SpotifyUserModel,SpotifyUserPlaylistModel, landingTemplate, Handlebars) {
 
     var RideView = SimpleView.extend({
         CLIENT_ID : '3bfc971fe4a14065a3f68c0bb0e6d040', // Your client id
@@ -39,7 +40,7 @@ define([
 
         initialize: function (options) {
             this.options = $.extend({}, options);
-            _.bindAll(this, 'render','getUserInfo');
+            _.bindAll(this, 'render','getUserInfo','fetchPlayLists');
             this.code = window.location.href.split('?')[1].split('=')[1].split('#')[0];
 
             $.ajax({
@@ -71,12 +72,21 @@ define([
                 }
             });
             this.spotifyUser = new SpotifyUserModel();
-            $.when(this.spotifyUser.fetch()).then(this.render);
+            $.when(this.spotifyUser.fetch()).then(this.fetchPlayLists);
+        },
+
+        fetchPlayLists : function () {
+            this.playListModel = new SpotifyUserPlaylistModel(this.spotifyUser.toJSON());
+            $.when(this.playListModel.fetch()).then(this.render);
         },
 
         render: function () {
             this.$el.empty();
-            this.$el.append(this.template(this.spotifyUser.toJSON()));
+            var data = {
+                user : this.spotifyUser.toJSON(),
+                playList : this.playListModel.toJSON()
+            };
+            this.$el.append(this.template(data));
             return this;
         }
     });
