@@ -16,7 +16,7 @@ define([
     var RideView = SimpleView.extend({
         CLIENT_ID : '3bfc971fe4a14065a3f68c0bb0e6d040', // Your client id
         my_secret : '2030d51fcb844d9e8dceb3a13f4ec9c9', // Your secret
-        REDIRECT_URI : 'http://localhost:9000/#ride', // Your redirect uri
+        REDIRECT_URI : 'http://mediahack.com/#ride', // Your redirect uri
         scopes : 'user-read-private user-read-email',
         TOKEN_URL : '/api/token',
 
@@ -56,6 +56,10 @@ define([
                 success: function(data, textStatus, jqXHR){
                     console.log(data);
                     //data - response from server
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr.status);
+                    console.log(thrownError);
                 }
             });
 

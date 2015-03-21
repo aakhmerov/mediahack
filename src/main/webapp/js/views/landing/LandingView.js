@@ -14,7 +14,7 @@ define([
 
         CLIENT_ID : '3bfc971fe4a14065a3f68c0bb0e6d040', // Your client id
         my_secret : '2030d51fcb844d9e8dceb3a13f4ec9c9', // Your secret
-        REDIRECT_URI : 'http://localhost:9000/#ride', // Your redirect uri
+        REDIRECT_URI : 'http://mediahack.com/#ride', // Your redirect uri
         scopes : 'user-read-private user-read-email',
 
         getLoginURL : function (scopes) {
@@ -62,6 +62,10 @@ define([
                 'user-read-email'
             ]);
             var w = window.location = url;
+        },
+
+        handleClick : function (event) {
+            this.login();
         },
 
         render: function () {
