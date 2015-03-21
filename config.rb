@@ -1,0 +1,9 @@
+http_path = "/"
+images_dir = "src/main/webapp/images"
+sass_dir = "src/main/webapp/scss"
+css_dir = "src/main/webapp/css"
+http_images_path = http_path + "images"
+generated_images_dir = "src/main/webapp/images/sprite"
+http_generated_images_path = http_path + "images/sprite"
+sourcemap = true
+#relative_assets = true

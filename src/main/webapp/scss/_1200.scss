@@ -1,0 +1,45 @@
+.header {
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+}
+.filter__heading {
+
+}
+.container-main {
+  padding: 70px 0 200px;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  /*.col-lg-6 {
+    position: absolute;
+    top:0;
+    padding-top: 80px;
+    z-index: 1;
+    height:100%;
+
+    width:49%;
+  }
+  .left-section {
+    left:15px;
+    padding-right: 20px;
+  }
+  .right-section {
+    right: 0;
+  }*/
+}
+.left-section, .right-section {
+  height: 100%;
+  overflow: auto;
+}
+
+.tablet-overflow {
+  overflow: auto;
+  height: 100%;
+}
+
+.footer {
+  margin: -200px 0 0;
+  height: 200px;
+}

@@ -1,0 +1,56 @@
+@import "variables";
+
+html {
+  min-height: 100%;
+  height: 100%;
+}
+
+body {
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $gray-dark;
+  font-family: 'Muli', sans-serif;
+  height: 100%;
+}
+
+ul, ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  margin: 0 0 15px;
+}
+
+:focus {
+  outline: none;
+}
+
+a {
+  @include transition(color, .3s);
+  color: $link-color;
+  &:hover, &:focus {
+    color: $link-hover-color;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 38px;
+  line-height: 48px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}

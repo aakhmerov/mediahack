@@ -1,0 +1,46 @@
+footer {
+	width: 100%;
+	background: #f1f1f1;
+}
+
+footer ul {
+	margin-bottom: 0;
+}
+
+
+footer .container-fluid .row {
+	margin-top: 20px;
+}
+
+footer a {
+	/*color: #f2eadc;*/
+	-webkit-transition: color 0.2s;
+	-moz-transition: color 0.2s;
+	-o-transition: color 0.2s;
+	transition: color 0.2s;
+	color: #1E1E1E;
+	font-size: 14px;
+	font-weight: 200;
+}
+
+
+footer a:hover {
+	color: #d5645a;
+	text-decoration: none;
+}
+
+footer ul {
+	list-style-type: none;
+}
+
+footer ul li,
+footer ul li.copyright-a
+ {
+	text-align: center;
+}
+.copyright-a a {
+font-size: 12px;
+}
+.footer {
+  margin: 20px 0 0;
+}

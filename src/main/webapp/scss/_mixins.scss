@@ -1,0 +1,112 @@
+@import "compass/css3";
+@import "mixins/clearfix";
+@import "mixins/buttons";
+@import "mixins/gradient";
+@import "mixins/grid";
+@import "mixins/grid-framework";
+
+
+
+$raceful-usage-threshold: 0.1;
+$critical-usage-threshold: 0.1;
+
+/**
+ * Generate sprite and classes by path and class name
+ *
+ * @param string $path Relative path from images to target sprite folder
+ * @param string $class-name Class prefix for generated css classes
+ */
+@mixin generate-sprite($path, $class-name: false) {
+  // Generate sprite image
+  $map: sprite-map($path + "x1/*.png", $spacing: 1px);
+  // Generate sprite image
+  $retina-map: sprite-map($path + "x2/*.png", $spacing: 2px);
+  // If no class name is set get it from sprite folder
+  @if not $class-name {
+	$class-name: sprite-map-name($map);
+  }
+  // Generate general sprite class
+  .#{$class-name} {
+	background-image: $map;
+	background-repeat: no-repeat;
+	background-size: image-width(sprite-path($map)) image-height(sprite-path($map));
+  }
+  // Generate sprite image classes with dimensions
+  @include sprites(
+  $map: $map,
+  $sprite-names: sprite-names($map),
+  $base-class: ".#{$class-name}",
+  $dimensions: true,
+  $prefix: $class-name
+  );
+  // Embedd retina sprites
+  @include retina {
+	// Generate general sprite class
+	.#{$class-name} {
+	  background-image: $retina-map;
+	}
+  }
+}
+
+/**
+ * Embedd content into retina media query
+ */
+@mixin retina() {
+  @media print,
+  (-webkit-min-device-pixel-ratio: 1.25),
+  (-o-min-device-pixel-ratio: 5/4),
+  (min-resolution: 120dpi) {
+	@content;
+  }
+}
+
+// Button variants
+//
+// Easily pump out default styles, as well as :hover, :focus, :active,
+// and disabled options for all buttons
+
+@mixin button-variant($color, $background, $border) {
+	color: $color;
+	background-color: $background;
+	border-color: $border;
+
+	&:hover,
+	&:focus,
+	&:active,
+	&.active,
+	.open > &.dropdown-toggle {
+		color: $color;
+		background-color: darken($background, 10%);
+		border-color: darken($border, 12%);
+	}
+	&:active,
+	&.active,
+	.open > &.dropdown-toggle {
+		background-image: none;
+	}
+	&.disabled,
+	&[disabled],
+	fieldset[disabled] & {
+		&,
+		&:hover,
+		&:focus,
+		&:active,
+		&.active {
+			background-color: $background;
+			border-color: $border;
+		}
+	}
+
+	.badge {
+		color: $background;
+		background-color: $color;
+	}
+}
+
+// Button sizes
+@mixin button-size($padding-vertical, $padding-horizontal, $font-size, $line-height, $border-radius) {
+	padding: $padding-vertical $padding-horizontal;
+	font-size: $font-size;
+	line-height: $line-height;
+	border-radius: $border-radius;
+}

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.aakhmerov</groupId>
+    <artifactId>mediahack</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+
+    <build>
+        <finalName>${artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <warName>${artifactId}-${version}</warName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>1.9.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-api</artifactId>
+                        <version>1.9.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>not-installed-node</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>0.0.19</version>
+                        <executions>
+                            <execution>
+                                <id>install node and npm</id>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <configuration>
+                                    <nodeVersion>v0.10.30</nodeVersion>
+                                    <npmVersion>1.4.12</npmVersion>
+                                    <npmDownloadRoot>http://nodejs.org/dist/npm/</npmDownloadRoot>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>npm install</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <!-- Optional configuration which provides for running any npm command -->
+                                <configuration>
+                                    <arguments>install</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>grunt build</id>
+                                <goals>
+                                    <goal>grunt</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- optional: if not specified, it will run Grunt's default
+                                    task (and you can remove this whole <configuration> section.) -->
+                                    <arguments>--no-color</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>installed-node</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <configuration>
+                                    <target name="building">
+                                        <echo>
+                                            <!--  NPM INSTALL  -->
+                                        </echo>
+                                        <exec executable="cmd" dir="${project.basedir}" osfamily="windows" failonerror="true">
+                                            <arg line="/c npm config set color false" />
+                                        </exec>
+                                        <exec executable="npm" dir="${project.basedir}" osfamily="unix" failonerror="true">
+                                            <arg line="config set color false" />
+                                        </exec>
+                                        <exec executable="cmd" dir="${project.basedir}" osfamily="windows" failonerror="true">
+                                            <arg line="/c npm install" />
+                                        </exec>
+                                        <exec executable="npm" dir="${project.basedir}" osfamily="unix" failonerror="true">
+                                            <arg line="install" />
+                                        </exec>
+                                        <echo>
+                                            <!-- GRUNT  -->
+                                        </echo>
+                                        <exec executable="cmd" dir="${project.basedir}" osfamily="windows" resultproperty="cmdresult">
+                                            <arg line="/c grunt --no-color &gt; grunt.status " />
+                                        </exec>
+                                        <exec executable="grunt" dir="${project.basedir}" osfamily="unix" resultproperty="cmdresult">
+                                            <arg line="-no-color" />
+                                        </exec>
+                                        <!--<condition property="cmdsuccess">
+                                            <equals arg1="${cmdresult}" arg2="0" />
+                                        </condition>-->
+                                        <!--<fail unless="cmdsuccess" />-->
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>minimizeJs</id>
+            <build>
+                <plugins>
+                    <!--overwrite css and js in the war with minified files-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <webResources>
+                                <resource>
+                                    <directory>${project.build.directory}/minified</directory>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+                    <!--perform resources minification-->
+                    <plugin>
+                        <groupId>com.github.bringking</groupId>
+                        <artifactId>requirejs-maven-plugin</artifactId>
+                        <version>2.0.4</version>
+                        <executions>
+                            <execution>
+
+                                <goals>
+                                    <goal>optimize</goal>
+
+                                </goals>
+                            </execution>
+                        </executions>
+
+                        <configuration>
+                            <!--<optimizerFile>${project.basedir}/lib/r.js</optimizerFile>-->
+                            <!-- path to optimizer json config file -->
+                            <configFile>${project.basedir}/minimize_config.js</configFile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
