@@ -12,6 +12,11 @@ define([
 
     var LandingView = SimpleView.extend({
 
+        my_client_id : '3bfc971fe4a14065a3f68c0bb0e6d040', // Your client id
+        my_secret : '2030d51fcb844d9e8dceb3a13f4ec9c9', // Your secret
+        redirect_uri : 'http://localhost:9000/#ride', // Your redirect uri
+        scopes : 'user-read-private user-read-email',
+
         template: Handlebars.compile(landingTemplate),
 
         events: {
