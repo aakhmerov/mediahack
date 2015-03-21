@@ -9,12 +9,16 @@ define([
     'collections/Elements',
     'models/spotify/SpotifyUserModel',
     'models/spotify/SpotifyUserPlaylistModel',
+    'models/echonest/TrackModel',
+    'models/echonest/SongModel',
     'collections/spotify/SpotifyTracksCollection',
     'text!templates/ride/rideTemplate.html',
+    'text!templates/ride/songInfoTemplate.html',
     //dirty hack for handlebars loading wait
     'handlebars'
 ], function ($, _, Backbone, SimpleView, Elements,SpotifyUserModel,
-             SpotifyUserPlaylistModel,SpotifyTracksCollection, landingTemplate, Handlebars) {
+             SpotifyUserPlaylistModel,EnTrackModel,EnSongModel,
+             SpotifyTracksCollection, landingTemplate,songInfoTemplate, Handlebars) {
 
     var RideView = SimpleView.extend({
         CLIENT_ID : '3bfc971fe4a14065a3f68c0bb0e6d040', // Your client id
@@ -25,26 +29,20 @@ define([
         USER_URL : '/v1/me',
 
         template: Handlebars.compile(landingTemplate),
+        songInfoTemplate: Handlebars.compile(songInfoTemplate),
+
 
         events: {
             'click .js-next' : 'handleNext',
             'click .js-prev' : 'handlePrev'
         },
 
-        filters: {
-
-        },
-
-        elements: null,
-
-        acView: null,
-        listView: null,
-        mapView: null,
 
         initialize: function (options) {
             this.options = $.extend({}, options);
             _.bindAll(this, 'render','getUserInfo','fetchPlayLists','fetchTracks',
-                'playNextTrack','handleNext','handlePrev','playPreviousTrack');
+                'playNextTrack','handleNext','handlePrev','playPreviousTrack','fetchEchonestInfo',
+                'fetchSongInfo','renderSongInfo');
             this.code = window.location.href.split('?')[1].split('=')[1].split('#')[0];
 
             $.ajax({
@@ -110,22 +108,43 @@ define([
             }
             this.audio.pause();
             this.audio.currentTime = 0;
-            this.audio.src = this.tracksCollection.at(this.currentTrack).get('track').preview_url;
+            var track = this.tracksCollection.at(this.currentTrack).get('track');
+            this.audio.src = track.preview_url;
+            this.fetchEchonestInfo(track);
+        },
+
+        fetchEchonestInfo : function (track) {
+            var data = {id :track.uri};
+            this.enTrack = new EnTrackModel (data);
+            $.when(this.enTrack.fetch()).then(this.fetchSongInfo);
+        },
+
+        fetchSongInfo : function () {
+            var data = {song :this.enTrack.get('response').track.song_id};
+            this.songInfo = new EnSongModel(data);
+            $.when(this.songInfo.fetch()).then(this.renderSongInfo);
+        },
+
+        renderSongInfo : function () {
+            this.$el.find('.song-info').empty();
+            this.$el.find('.song-info').append(this.songInfoTemplate(this.songInfo.toJSON()))
         },
 
         playNextTrack : function (first) {
             if (!first) {
                 this.currentTrack = this.currentTrack + 1;
             }
+            var track = this.tracksCollection.at(this.currentTrack).get('track');
             if (!this.audio) {
-                this.audio = new Audio(this.tracksCollection.at(this.currentTrack).get('track').preview_url);
+                this.audio = new Audio(track.preview_url);
             } else {
                 this.audio.pause();
                 this.audio.currentTime = 0;
-                this.audio.src = this.tracksCollection.at(this.currentTrack).get('track').preview_url;
+                this.audio.src = track.preview_url;
             }
 
             this.audio.play();
+            this.fetchEchonestInfo(track);
         },
 
         render: function () {
