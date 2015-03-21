@@ -8,7 +8,7 @@ define([
 ], function ($, _, Backbone) {
     var W3wModel = Backbone.Model.extend({
 //        url : 'http://api.what3words.com/w3w?key=5IBGX5LJ&string=',
-        url : 'http://api.what3words.com/position?key=5IBGX5LJ&position={{lat}},{{long}}',
+        url : 'http://api.what3words.com/position?key=5IBGX5LJ&position=',
         initialize: function (options) {
             if (options) {
                 this.url = this.url + options.position;

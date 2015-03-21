@@ -4,10 +4,11 @@ define([
     'backbone',
     'views/SimpleView',
     'views/landing/AutocompleteView',
+    'models/w3w/W3wModel',
     'text!templates/landing/landingTemplate.html',
     //dirty hack for handlebars loading wait
     'handlebars'
-], function ($, _, Backbone, SimpleView,AutocompleteView, landingTemplate, Handlebars) {
+], function ($, _, Backbone, SimpleView,AutocompleteView,W3wModel, landingTemplate, Handlebars) {
 
     var LandingView = SimpleView.extend({
 
@@ -22,7 +23,7 @@ define([
         initialize: function (options) {
             this.options = $.extend({}, options);
             this.options.params = this.parseUrlParams(this.options.params);
-            _.bindAll(this, 'render','search','searchAndRide');
+            _.bindAll(this, 'render','search','searchAndRide','handleWords');
             this.render();
             this.acView.on('ready', this.search);
             this.acView.fillInDefault("Berlin, Germany");
@@ -35,8 +36,13 @@ define([
         },
 
         searchAndRide : function (event) {
-            console.log(this.place.lat);
-            console.log(this.place.lng);
+            var data = {position: this.place.lat + ',' + this.place.lng};
+            this.w3w = new W3wModel(data);
+            $.when(this.w3w.fetch()).then(this.handleWords);
+        },
+
+        handleWords : function () {
+            console.log(this.w3w.toJSON());
         },
 
         render: function () {
