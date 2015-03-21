@@ -79,9 +79,6 @@
   @extend .cf;
 
   &.is-active {
-    .filter__search {
-      padding-right: 130px;
-    }
     .filters-mobile {
       display: block;
     }
@@ -270,4 +267,8 @@
   max-width: 65px;
   max-height: 65px;
   margin: 0 auto;
+}
+
+.ride {
+  cursor: pointer;
 }

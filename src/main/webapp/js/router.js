@@ -14,7 +14,8 @@ define([
 
     var AppRouter = Backbone.Router.extend({
         routes: {
-            '': 'pageLanding',
+            '': 'pageSearchLanding',
+            'playRide': 'pageLanding',
             'ride': 'pageRide',
             '*actions': 'page404'
         },
@@ -59,6 +60,16 @@ define([
             this.view = view;
         },
 
+        pageSearchLanding : function (e, query) {
+            this.showParams = {
+                el: '#page',
+                mainContentOptions: {
+                    params: query
+                }
+            };
+            require(['views/landing/SearchLandingView'], this.showPage);
+        },
+
         pageRide :function (e, query) {
             this.showParams = {
                 el: '#page',
@@ -77,7 +88,7 @@ define([
                     params: query
                 }
             };
-            require(['views/landing/LandingView'], this.showPage);
+            require(['views/landing/LoginLandingView'], this.showPage);
         },
 
         page404: function () {

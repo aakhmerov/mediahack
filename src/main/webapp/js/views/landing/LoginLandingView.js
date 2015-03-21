@@ -35,11 +35,7 @@ define([
         template: Handlebars.compile(landingTemplate),
 
         events: {
-            'click .btn':'handleClick'
-        },
-
-        filters: {
-
+            'click .ride':'handleClick'
         },
 
         acView: null,
