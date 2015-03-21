@@ -39,7 +39,7 @@ define([
 
         initialize: function (options) {
             this.options = $.extend({}, options);
-            _.bindAll(this, 'render','getUserInfo','showUser');
+            _.bindAll(this, 'render','getUserInfo');
             this.code = window.location.href.split('?')[1].split('=')[1].split('#')[0];
 
             $.ajax({
@@ -65,24 +65,13 @@ define([
         getUserInfo : function (data, textStatus, jqXHR) {
 
             this.access = data;
-            $.ajax({
-                url: this.USER_URL,
+            $.ajaxSetup({
                 headers: {
-                    "Accept" : "application/json; charset=utf-8",
                     'Authorization': 'Bearer ' + this.access.access_token
-                },
-                type: 'GET',
-                success: this.showUser,
-                error: function (xhr, ajaxOptions, thrownError) {
-                    console.log(xhr.status);
-                    console.log(thrownError);
                 }
             });
-        },
-
-        showUser : function (data, textStatus, jqXHR) {
-            this.spotifyUser = new SpotifyUserModel(data);
-            this.render();
+            this.spotifyUser = new SpotifyUserModel();
+            $.when(this.spotifyUser.fetch()).then(this.render);
         },
 
         render: function () {

@@ -8,7 +8,11 @@ define([
 ], function ($, _, Backbone) {
     var SpotifyUserModel = Backbone.Model.extend({
 
-        initialize: function (options) {}
+        url : "v1/me",
+        initialize: function (options) {},
+        parse : function (data) {
+            return data;
+        }
 
     });
     return SpotifyUserModel;
