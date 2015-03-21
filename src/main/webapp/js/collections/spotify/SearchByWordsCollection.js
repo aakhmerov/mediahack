@@ -15,7 +15,7 @@ define([
 
         initialize: function(options) {
             this.fetched = false;
-            if (options) {
+            if (options.word) {
                 this.url = this.urlTemplate(options);
             }
         },

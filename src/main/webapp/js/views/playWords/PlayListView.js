@@ -23,21 +23,9 @@ define([
             _.bindAll(this, 'render','prepareList');
         },
 
-        prepareList : function() {
-            var data = [];
-            for (var i = 0; i < this.model.length; i++) {
-                var collection = this.model[i];
-                if (collection) {
-                    data = $.merge(data,collection.toJSON());
-                }
-            }
-
-            return data;
-        },
-
         render: function () {
             this.$el.empty();
-            var data = this.prepareList();
+            var data = this.model.toJSON();
             this.$el.append(this.template(data));
             return this;
         }

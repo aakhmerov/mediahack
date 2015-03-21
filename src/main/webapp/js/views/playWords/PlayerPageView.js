@@ -8,13 +8,14 @@ define([
     'views/SimpleView',
     'models/playWords/PlayerLocationModel',
     'collections/spotify/SearchByWordsCollection',
+    'collections/spotify/TracksCollection',
     'views/playWords/LocationDisplayView',
     'views/playWords/PlayListView',
     'views/playWords/PlayerView',
     'text!templates/playWords/playerView.html',
     //dirty hack for handlebars loading wait
     'handlebars'
-], function ($, _, Backbone, SimpleView,PlayerLocationModel,SearchByWordsCollection,
+], function ($, _, Backbone, SimpleView,PlayerLocationModel,SearchByWordsCollection,TracksCollection,
              LocationDisplayView,PlayListView,PlayerView, playerView,Handlebars) {
 
     var PlayerPageView = SimpleView.extend({
@@ -34,7 +35,6 @@ define([
 //            this.
             this.locationView = new LocationDisplayView({model:this.location});
             this.searchCollections = [];
-            this.playListView = new PlayListView({model : this.searchCollections});
             for (var word in this.location.get('w3w').words) {
                 var collection = new SearchByWordsCollection({word : this.location.get('w3w').words[word]});
                 $.when(collection.fetch()).then(this.renderSongs);
@@ -45,12 +45,19 @@ define([
 
         renderSongs : function () {
             var allFetched = true;
+            var data = [];
             for (var i = 0; i < this.searchCollections.length; i++) {
-                if (!this.searchCollections[i].fetched) {
+                var collection = this.searchCollections[i];
+                if (!collection.fetched) {
                     allFetched = false;
+                    break;
+                } else {
+                    data = $.merge(data,collection.toJSON());
                 }
             }
             if (allFetched) {
+                this.tracksCollection = new TracksCollection(data);
+                this.playListView = new PlayListView({model : this.tracksCollection});
                 this.$el.find('.songs').empty();
                 this.$el.find('.songs').append(this.playListView.render().$el);
             }
