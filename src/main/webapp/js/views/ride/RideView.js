@@ -27,7 +27,8 @@ define([
         template: Handlebars.compile(landingTemplate),
 
         events: {
-            'click .js-next' : 'handleNext'
+            'click .js-next' : 'handleNext',
+            'click .js-prev' : 'handlePrev'
         },
 
         filters: {
@@ -42,7 +43,8 @@ define([
 
         initialize: function (options) {
             this.options = $.extend({}, options);
-            _.bindAll(this, 'render','getUserInfo','fetchPlayLists','fetchTracks','playNextTrack','handleNext');
+            _.bindAll(this, 'render','getUserInfo','fetchPlayLists','fetchTracks',
+                'playNextTrack','handleNext','handlePrev','playPreviousTrack');
             this.code = window.location.href.split('?')[1].split('=')[1].split('#')[0];
 
             $.ajax({
@@ -95,6 +97,20 @@ define([
         handleNext : function (event) {
             this.playNextTrack(false);
             this.render();
+        },
+
+        handlePrev : function (event) {
+            this.playPreviousTrack();
+            this.render();
+        },
+
+        playPreviousTrack : function () {
+            if (this.currentTrack != 0) {
+                this.currentTrack = this.currentTrack - 1;
+            }
+            this.audio.pause();
+            this.audio.currentTime = 0;
+            this.audio.src = this.tracksCollection.at(this.currentTrack).get('track').preview_url;
         },
 
         playNextTrack : function (first) {
