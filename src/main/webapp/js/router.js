@@ -15,6 +15,7 @@ define([
     var AppRouter = Backbone.Router.extend({
         routes: {
             '': 'pageSearchLanding',
+            'playWords': 'pagePlayWords',
             'playRide': 'pageLanding',
             'ride': 'pageRide',
             '*actions': 'page404'
@@ -27,7 +28,7 @@ define([
         idleInterval: null,
 
         initialize: function () {
-            _.bindAll(this, 'pageLanding','pageRide', 'page404', 'showPage', 'removeCurrentView');
+            _.bindAll(this, 'pageLanding','pagePlayWords','pageRide', 'page404', 'showPage', 'removeCurrentView');
         },
 
         scrollToTop: function () {
@@ -80,6 +81,15 @@ define([
             require(['views/ride/RideView'], this.showPage);
         },
 
+        pagePlayWords : function (e, query) {
+            this.showParams = {
+                el: '#page',
+                mainContentOptions: {
+                    params: query
+                }
+            };
+            require(['views/playWords/PlayerView'], this.showPage);
+        },
 
         pageLanding: function (e, query) {
             this.showParams = {

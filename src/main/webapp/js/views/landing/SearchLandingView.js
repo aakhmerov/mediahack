@@ -42,7 +42,9 @@ define([
         },
 
         handleWords : function () {
-            console.log(this.w3w.toJSON());
+            window.localStorage.setItem("w3w",JSON.stringify(this.w3w.toJSON()));
+            window.localStorage.setItem("place",this.$el.find('input').val());
+            router.navigate('playWords',{trigger: true});
         },
 
         render: function () {
