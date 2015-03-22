@@ -16,12 +16,18 @@ define([
         template: Handlebars.compile(locationView),
 
         events: {
+            'click .switch' : 'toggleMap'
         },
 
         initialize: function (options) {
             this.options = $.extend({}, options);
+            _.bindAll(this, 'render','toggleMap');
+
         },
 
+        toggleMap : function (event) {
+            Backbone.Events.trigger('toggleMap');
+        },
 
         render: function () {
             this.$el.empty();

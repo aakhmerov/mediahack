@@ -30,7 +30,8 @@ define([
         initialize: function (options) {
             this.options = $.extend({}, options);
             _.bindAll(this, 'render','renderSongs','nextTrack','prevTrack',
-                'renderLocation','renderSongs','playCurrentTrack','initRoute','processRouteInit');
+                'renderLocation','renderSongs','playCurrentTrack','initRoute',
+                'processRouteInit','toggleMap');
             this.location = new PlayerLocationModel ({
                 w3w : JSON.parse(window.localStorage.getItem ("w3w")),
                 current : JSON.parse(window.localStorage.getItem ("current")),
@@ -46,6 +47,7 @@ define([
                 this.searchCollections.push(collection);
             }
             this.render();
+            this.$el.find('.map').hide();
         },
 
         initRoute : function () {
@@ -137,10 +139,8 @@ define([
         },
 
         renderMapView : function () {
-            if (this.mapView.isRendered()) {
-                this.$el.find('.map').empty();
-                this.$el.find('.map').append(this.mapView.render().$el);
-            }
+            this.$el.find('.map').empty();
+            this.$el.find('.map').append(this.mapView.render().$el);
         },
 
         processRouteInit : function () {
@@ -148,12 +148,20 @@ define([
             this.routePoint = this.routeModel.get('legs')[0].points.shift();
             this.location.set('routePoint',this.routePoint);
             this.mapView = new MapView ({model : this.routeModel});
+            this.renderMapView();
             this.renderLocation();
+            Backbone.Events.on('toggleMap',this.toggleMap);
+        },
+
+        toggleMap : function (event) {
+            this.$el.find('.map').toggle();
+            this.$el.find('.songs').toggle();
         },
 
         renderLocation : function () {
             this.$el.find('.location').empty();
             this.$el.find('.location').append(this.locationView.render().$el);
+            this.locationView.delegateEvents();
         },
 
         render: function () {

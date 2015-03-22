@@ -21,7 +21,6 @@ define([
         initialize: function (options) {
             this.options = $.extend({}, options);
             _.bindAll(this, 'render','isRendered');
-            this.rendered = false;
         },
 
         isRendered : function () {
