@@ -36,7 +36,10 @@ define([
                     apiKey: this.apiKey,
                     zoom: 12
                 });
-                this.map.displayRoute(["Boston, MA", [ 43.6445, -72.2427]], function (response) {
+                var points = this.model.get('legs')[0].points;
+                var p1 = [points[0].latitude,points[0].longitude];
+                var p2  = [points[(points.length-1)].latitude,points[(points.length-1)].longitude];
+                this.map.displayRoute([p1, p2], function (response) {
                     // do something with the routing response here
                 });
                 this.mapRendered = true;
