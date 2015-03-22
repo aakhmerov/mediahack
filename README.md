@@ -1,4 +1,4 @@
-# group-estate
+# mediahack
 
 ###prerequisites
 * nodejs
@@ -10,6 +10,7 @@
 * clone the repo
 * cd to project directory
 * npm install
-* grunt serve
+* grunt watch
+* link your nginx configuration
 
 No need on running serve on every change - changes in templates and js files are being reflected immediately, changes in scss files invoke compass task

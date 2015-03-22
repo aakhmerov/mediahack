@@ -4,6 +4,9 @@
     font-size: 12px;
     color:$gray-light;
   }
+  .song-name {
+    max-width: 200px;
+  }
 
   .bordered {
     margin: 0 0 15px;
@@ -49,9 +52,7 @@
     &.bordered {
       padding: 0;
     }
-    .song-name {
-      max-width: 200px;
-    }
+
   }
 
 
