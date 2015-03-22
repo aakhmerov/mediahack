@@ -7,6 +7,7 @@ define([
     'backbone',
     'views/SimpleView',
     'models/playWords/PlayerLocationModel',
+    'models/tomtom/RouteModel',
     'collections/spotify/SearchByWordsCollection',
     'collections/spotify/TracksCollection',
     'views/playWords/LocationDisplayView',
@@ -15,7 +16,7 @@ define([
     'text!templates/playWords/playerView.html',
     //dirty hack for handlebars loading wait
     'handlebars'
-], function ($, _, Backbone, SimpleView,PlayerLocationModel,SearchByWordsCollection,TracksCollection,
+], function ($, _, Backbone, SimpleView,PlayerLocationModel,RouteModel,SearchByWordsCollection,TracksCollection,
              LocationDisplayView,PlayListView,PlayerView, playerView,Handlebars) {
 
     var PlayerPageView = SimpleView.extend({
@@ -27,12 +28,14 @@ define([
 
         initialize: function (options) {
             this.options = $.extend({}, options);
-            _.bindAll(this, 'render','renderSongs','nextTrack','prevTrack','renderSongs','playCurrentTrack');
+            _.bindAll(this, 'render','renderSongs','nextTrack','prevTrack',
+                'renderLocation','renderSongs','playCurrentTrack','initRoute');
             this.location = new PlayerLocationModel ({
                 w3w : JSON.parse(window.localStorage.getItem ("w3w")),
+                current : JSON.parse(window.localStorage.getItem ("current")),
                 place : window.localStorage.getItem ("place")
             });
-//            this.
+            this.initRoute();
             this.locationView = new LocationDisplayView({model:this.location});
             this.searchCollections = [];
             for (var word in this.location.get('w3w').words) {
@@ -41,6 +44,14 @@ define([
                 this.searchCollections.push(collection);
             }
             this.render();
+        },
+
+        initRoute : function () {
+            var pointsString = this.location.get('current').latitude + ',' + this.location.get('current').longitude + ":" +
+                this.location.get('w3w').position[0] + "," + this.location.get('w3w').position[1];
+            this.routeModel = new RouteModel ({points:pointsString});
+            $.when(this.routeModel.fetch()).then(this.renderLocation);
+            this.location.set('route',this.routeModel)
         },
 
         renderSongs : function () {
@@ -112,10 +123,15 @@ define([
             return this.tracksCollection.at(this.currentTrack);
         },
 
+        renderLocation : function () {
+            this.$el.find('.location').empty();
+            this.$el.find('.location').append(this.locationView.render().$el);
+        },
+
         render: function () {
             this.$el.empty();
             this.$el.append(this.template({}));
-            this.$el.find('.location').append(this.locationView.render().$el);
+            this.renderLocation();
             return this;
         }
     });

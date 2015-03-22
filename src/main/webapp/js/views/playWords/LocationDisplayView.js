@@ -27,6 +27,7 @@ define([
             this.$el.empty();
             var data = this.model.toJSON();
             data['3words'] = data.w3w.words.join('.');
+            data.route = data.route.toJSON();
             this.$el.append(this.template(data));
             return this;
         }

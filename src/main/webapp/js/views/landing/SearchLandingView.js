@@ -23,7 +23,7 @@ define([
         initialize: function (options) {
             this.options = $.extend({}, options);
             this.options.params = this.parseUrlParams(this.options.params);
-            _.bindAll(this, 'render','search','searchAndRide','handleWords');
+            _.bindAll(this, 'render','search','searchAndRide','handleWords','handleCurrentPosition');
             this.render();
             this.acView.on('ready', this.search);
             this.acView.fillInDefault("Berlin, Germany");
@@ -42,10 +42,17 @@ define([
             $.when(this.w3w.fetch()).then(this.handleWords);
         },
 
+        handleCurrentPosition : function (position) {
+            window.localStorage.setItem("current",JSON.stringify(position.coords));
+            router.navigate('playWords',{trigger: true});
+        },
+
         handleWords : function () {
             window.localStorage.setItem("w3w",JSON.stringify(this.w3w.toJSON()));
             window.localStorage.setItem("place",this.$el.find('input').val());
-            router.navigate('playWords',{trigger: true});
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(this.handleCurrentPosition);
+            }
         },
 
         render: function () {
