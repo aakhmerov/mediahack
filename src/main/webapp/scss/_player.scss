@@ -1,5 +1,10 @@
 .player-view {
 
+  .sub-words {
+    font-size: 12px;
+    color:$gray-light;
+  }
+
   .bordered {
     margin: 0 0 15px;
     box-shadow: 0px 0px 20px #162027;
@@ -40,8 +45,13 @@
     }
   }
 
-  .songs.bordered {
-    padding: 0;
+  .songs {
+    &.bordered {
+      padding: 0;
+    }
+    .song-name {
+      max-width: 200px;
+    }
   }
 
 

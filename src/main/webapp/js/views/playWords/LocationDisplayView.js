@@ -25,7 +25,9 @@ define([
 
         render: function () {
             this.$el.empty();
-            this.$el.append(this.template(this.model.toJSON()));
+            var data = this.model.toJSON();
+            data['3words'] = data.w3w.words.join('.');
+            this.$el.append(this.template(data));
             return this;
         }
     });
