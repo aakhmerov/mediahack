@@ -36,6 +36,7 @@ define([
         playTrack : function () {
             if (!this.audio) {
                 this.audio = new Audio(this.model.get('preview_url'));
+                this.audio.onended = this.handleNext;
             } else {
                 this.audio.pause();
                 this.audio.currentTime = 0;
