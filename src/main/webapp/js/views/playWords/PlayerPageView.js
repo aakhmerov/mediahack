@@ -88,25 +88,23 @@ define([
             var track = this.tracksCollection.shift();
             if (track) {
                 this.unshiftedTracks.push(this.currentTrack);
-
-                this.currentTrack = track;
-                this.player.model = this.currentTrack;
-                this.renderPlayList();
-                this.playCurrentTrack();
-                this.player.playTrack();
+                this.changeTo(track);
             }
+        },
+
+        changeTo : function (track) {
+            this.currentTrack = track;
+            this.player.model = this.currentTrack;
+            this.renderPlayList();
+            this.playCurrentTrack();
+            this.player.playTrack();
         },
 
         prevTrack : function (event) {
             var track = this.unshiftedTracks.pop();
             if (track) {
                 this.tracksCollection.unshift(this.currentTrack);
-                
-                this.currentTrack = track;
-                this.player.model = this.currentTrack;
-                this.renderPlayList();
-                this.playCurrentTrack();
-                this.player.playTrack();
+                this.changeTo(track);
             }
         },
 
