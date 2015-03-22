@@ -10,7 +10,10 @@ require.config({
         text: 'libs/ext/text',
         async: 'libs/require/async',
         gmaps: 'libs/gmaps/gmaps-amd',
-        json: 'libs/require/json'
+        json: 'libs/require/json',
+//        leaflet: 'libs/tomtom/leaflet',
+//        tmap: 'libs/tomtom/tomtom.map.amd',
+        tcontrols: 'libs/tomtom/tomtom.controls.amd'
     },
     waitSeconds: 200,
     shim: {

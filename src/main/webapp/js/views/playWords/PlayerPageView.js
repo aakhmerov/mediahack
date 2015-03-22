@@ -47,7 +47,7 @@ define([
                 this.searchCollections.push(collection);
             }
             this.render();
-            this.$el.find('.map').hide();
+            this.$el.find('.songs').hide();
         },
 
         initRoute : function () {
@@ -135,12 +135,12 @@ define([
             this.routePoint = this.routeModel.get('legs')[0].points.shift();
             this.location.set('routePoint',this.routePoint);
             this.renderLocation();
-            this.renderMapView();
+//            this.renderMapView();
         },
 
         renderMapView : function () {
-            this.$el.find('.map').empty();
             this.$el.find('.map').append(this.mapView.render().$el);
+            this.mapView.renderMap();
         },
 
         processRouteInit : function () {
