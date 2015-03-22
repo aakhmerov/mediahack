@@ -1,19 +1,27 @@
 
-<div class="">
-    <div class="image table-cell">
+<div class="separated flex-center-vertically">
+    <div class="image left">
         <img src="{{album.images.2.url}}">
     </div>
-    <div class="table-cell">
+    <div class="left">
         <div class="info">
             <div>{{name}}</div>
             <div>{{artists.0.name}}</div>
         </div>
-
     </div>
+    <div class="row"></div>
 </div>
 <div class="">
-    <div class="player navigation">
-        <div class="btn js-prev">prev</div>
-        <div class="btn js-next">next</div>
+    <div class="navigation mt20">
+        <div class="left">
+            <img src="/img/arrow_left.png" class="js-prev">
+        </div>
+        <div class="right">
+            <img src="/img/arrow_right.png" class="js-next">
+        </div>
+        <div class="middle">
+            <img src="/img/play.png" class="middle">
+        </div>
+
     </div>
 </div>

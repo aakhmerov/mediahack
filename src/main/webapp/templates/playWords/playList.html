@@ -1,12 +1,14 @@
 {{#each this}}
-<div class="play-list-item">
-    <div class="image">
+<div class="separated">
+    <div class="image left">
         <img src="{{album.images.2.url}}">
     </div>
-    <div class="info">
-        <div>{{name}}</div>
-        <div>{{artists.0.name}}</div>
+    <div class="left">
+        <div class="info">
+            <div>{{name}}</div>
+            <div>{{artists.0.name}}</div>
+        </div>
     </div>
+    <div class="row"></div>
 </div>
-<br/>
 {{/each}}

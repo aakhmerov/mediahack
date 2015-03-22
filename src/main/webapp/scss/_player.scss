@@ -6,20 +6,44 @@
     padding: 15px;
   }
 
+  .table-row {
+    display: table-row;
+  }
+  .table-cell {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .image {
+    padding-right: 40px;
+  }
+  .info {
+    margin-bottom: 28px;
+  }
+  .separated {
+    position: relative;
+    padding-top: 6px;
+    padding-left: 6px;
+    margin: 0 0 6px;
+    box-shadow: 0px 0px 20px #162027;
+    &:hover {
+      box-shadow: 0px 0px 20px #070b0f;
+    }
+
+  }
+
   .player-navigation {
-    .table-row {
-      display: table-row;
+    .middle {
+      margin: 0 auto;
     }
-    .table-cell {
-      display: table-cell;
-      vertical-align: middle;
-    }
-    .image {
-      padding-right: 40px;
-    }
-    .info {
-      margin-bottom: 28px;
+    .navigation {
+      text-align:center;
     }
   }
+
+  .songs.bordered {
+    padding: 0;
+  }
+
+
 }
 
