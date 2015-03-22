@@ -1,7 +1,8 @@
 
 <div class="left">
-    <div>{{place}} {{#if route.summary}}({{route.summary.lengthInMeters}} meters){{/if}}</div>
+    <div>{{place}} {{#if routeSummary}}({{routeSummary.lengthInMeters}} meters){{/if}}</div>
     <div class="sub-words">{{3words}}</div>
+    <div class="sub-words">[{{routePoint.latitude}},{{routePoint.longitude}}]</div>
 </div>
 <div class="right">
     <img src="/img/switch.png">

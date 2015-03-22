@@ -29,7 +29,7 @@ define([
         initialize: function (options) {
             this.options = $.extend({}, options);
             _.bindAll(this, 'render','renderSongs','nextTrack','prevTrack',
-                'renderLocation','renderSongs','playCurrentTrack','initRoute');
+                'renderLocation','renderSongs','playCurrentTrack','initRoute','processRouteInit');
             this.location = new PlayerLocationModel ({
                 w3w : JSON.parse(window.localStorage.getItem ("w3w")),
                 current : JSON.parse(window.localStorage.getItem ("current")),
@@ -50,8 +50,8 @@ define([
             var pointsString = this.location.get('current').latitude + ',' + this.location.get('current').longitude + ":" +
                 this.location.get('w3w').position[0] + "," + this.location.get('w3w').position[1];
             this.routeModel = new RouteModel ({points:pointsString});
-            $.when(this.routeModel.fetch()).then(this.renderLocation);
-            this.location.set('route',this.routeModel)
+            $.when(this.routeModel.fetch()).then(this.processRouteInit);
+
         },
 
         renderSongs : function () {
@@ -100,6 +100,7 @@ define([
             if (track) {
                 this.unshiftedTracks.push(this.currentTrack);
                 this.changeTo(track);
+                this.updateRoute();
             }
         },
 
@@ -116,11 +117,24 @@ define([
             if (track) {
                 this.tracksCollection.unshift(this.currentTrack);
                 this.changeTo(track);
+                this.updateRoute();
             }
         },
 
-        getCurrentTrack : function () {
-            return this.tracksCollection.at(this.currentTrack);
+        /**
+         * set current point to the next point on the route
+         * update location view
+         * update map view if rendered
+         */
+        updateRoute : function () {
+
+        },
+
+        processRouteInit : function () {
+            this.location.set('routeSummary',this.routeModel.get('summary'));
+            this.routePoint = this.routeModel.get('legs')[0].points.shift();
+            this.location.set('routePoint',this.routePoint);
+            this.renderLocation();
         },
 
         renderLocation : function () {
