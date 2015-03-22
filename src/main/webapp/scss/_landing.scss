@@ -1,0 +1,16 @@
+.content-wrapper {
+  position: relative;
+}
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
+
+.ride {
+  display: flex;
+//  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+}
