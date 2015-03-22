@@ -27,7 +27,7 @@ define([
 
         initialize: function (options) {
             this.options = $.extend({}, options);
-            _.bindAll(this, 'render','renderSongs');
+            _.bindAll(this, 'render','renderSongs','nextTrack','prevTrack','renderSongs','playCurrentTrack');
             this.location = new PlayerLocationModel ({
                 w3w : JSON.parse(window.localStorage.getItem ("w3w")),
                 place : window.localStorage.getItem ("place")
@@ -57,10 +57,61 @@ define([
             }
             if (allFetched) {
                 this.tracksCollection = new TracksCollection(data);
+                this.unshiftedTracks = new TracksCollection();
+
+                this.currentTrack = this.tracksCollection.shift();
+
+                this.player = new PlayerView({model : this.currentTrack});
                 this.playListView = new PlayListView({model : this.tracksCollection});
+
                 this.$el.find('.songs').empty();
                 this.$el.find('.songs').append(this.playListView.render().$el);
+
+                this.$el.find('.player-navigation').empty();
+                this.$el.find('.player-navigation').append(this.player.render().$el);
+
+                Backbone.Events.on('nextTrack',this.nextTrack);
+                Backbone.Events.on('prevTrack',this.prevTrack);
+                this.player.playTrack();
             }
+        },
+
+        playCurrentTrack : function () {
+            this.player.render();
+        },
+
+        renderPlayList : function () {
+            this.playListView.render();
+        },
+
+        nextTrack : function (event) {
+            var track = this.tracksCollection.shift();
+            if (track) {
+                this.unshiftedTracks.push(this.currentTrack);
+
+                this.currentTrack = track;
+                this.player.model = this.currentTrack;
+                this.renderPlayList();
+                this.playCurrentTrack();
+                this.player.playTrack();
+            }
+        },
+
+        prevTrack : function (event) {
+            var track = this.unshiftedTracks.pop();
+            if (track) {
+                this.tracksCollection.unshift(this.currentTrack);
+                
+                this.currentTrack = track;
+                this.player.model = this.currentTrack;
+                this.renderPlayList();
+                this.playCurrentTrack();
+                this.player.playTrack();
+            }
+        },
+
+        getCurrentTrack : function () {
+            return this.tracksCollection.at(this.currentTrack);
         },
 
         render: function () {

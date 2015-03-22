@@ -20,7 +20,7 @@ define([
 
         initialize: function (options) {
             this.options = $.extend({}, options);
-            _.bindAll(this, 'render','prepareList');
+            _.bindAll(this, 'render');
         },
 
         render: function () {

@@ -1,7 +1,13 @@
 <div class="container">
     <div class="player">
-        <p>{{track.artists.0.name}} | {{track.name}} - {{track.uri}}</p>
-        <p class="song-info"></p>
+        <div class="image">
+            <img src="{{album.images.2.url}}">
+        </div>
+        <div class="info">
+            <div>{{name}}</div>
+            <div>{{artists.0.name}}</div>
+        </div>
+        <br/>
         <div class="player navigation">
             <div class="btn js-prev">prev</div>
             <div class="btn js-next">next</div>
