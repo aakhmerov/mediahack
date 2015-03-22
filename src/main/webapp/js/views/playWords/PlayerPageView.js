@@ -13,11 +13,12 @@ define([
     'views/playWords/LocationDisplayView',
     'views/playWords/PlayListView',
     'views/playWords/PlayerView',
+    'views/routing/MapView',
     'text!templates/playWords/playerView.html',
     //dirty hack for handlebars loading wait
     'handlebars'
 ], function ($, _, Backbone, SimpleView,PlayerLocationModel,RouteModel,SearchByWordsCollection,TracksCollection,
-             LocationDisplayView,PlayListView,PlayerView, playerView,Handlebars) {
+             LocationDisplayView,PlayListView,PlayerView,MapView, playerView,Handlebars) {
 
     var PlayerPageView = SimpleView.extend({
 
@@ -36,6 +37,7 @@ define([
                 place : window.localStorage.getItem ("place")
             });
             this.initRoute();
+
             this.locationView = new LocationDisplayView({model:this.location});
             this.searchCollections = [];
             for (var word in this.location.get('w3w').words) {
@@ -50,6 +52,7 @@ define([
             var pointsString = this.location.get('current').latitude + ',' + this.location.get('current').longitude + ":" +
                 this.location.get('w3w').position[0] + "," + this.location.get('w3w').position[1];
             this.routeModel = new RouteModel ({points:pointsString});
+
             $.when(this.routeModel.fetch()).then(this.processRouteInit);
 
         },
@@ -127,13 +130,24 @@ define([
          * update map view if rendered
          */
         updateRoute : function () {
+            this.routePoint = this.routeModel.get('legs')[0].points.shift();
+            this.location.set('routePoint',this.routePoint);
+            this.renderLocation();
+            this.renderMapView();
+        },
 
+        renderMapView : function () {
+            if (this.mapView.isRendered()) {
+                this.$el.find('.map').empty();
+                this.$el.find('.map').append(this.mapView.render().$el);
+            }
         },
 
         processRouteInit : function () {
             this.location.set('routeSummary',this.routeModel.get('summary'));
             this.routePoint = this.routeModel.get('legs')[0].points.shift();
             this.location.set('routePoint',this.routePoint);
+            this.mapView = new MapView ({model : this.routeModel});
             this.renderLocation();
         },
 
