@@ -14,3 +14,5 @@
 * link your nginx configuration
 
 No need on running serve on every change - changes in templates and js files are being reflected immediately, changes in scss files invoke compass task
+
+"test" server is here http://playplace.ostdlabs.com/
